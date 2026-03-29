@@ -11,7 +11,7 @@ export default function Home() {
   const vfs = buildVFS(repos, aboutContent, contactContent)
   const projects = repos.map((repo) => ({
     repo,
-    frontmatter: getStoryDoc(repo.name)?.frontmatter,
+    story: getStoryDoc(repo.name) ?? null,
   }))
 
   return (

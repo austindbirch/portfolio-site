@@ -13,12 +13,12 @@ import { TerminalIcon, ProjectsIcon, AboutIcon, ContactIcon } from '@/components
 import { useEffect } from 'react'
 import { useUrlSync } from '@/components/WindowManager/useUrlSync'
 import { useWindowManager } from '@/components/WindowManager/useWindowManager'
-import type { VFS, GitHubRepo, StoryFrontmatter } from '@/types'
+import type { VFS, ProjectData } from '@/types'
 import desktopStyles from './Desktop.module.css'
 
 interface Props {
   vfs: VFS
-  projects: { repo: GitHubRepo; frontmatter?: StoryFrontmatter }[]
+  projects: ProjectData[]
   aboutContent: string
   contactContent: string
 }
