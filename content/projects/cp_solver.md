@@ -75,7 +75,7 @@ class Board:
     )
 ```
 
-We overlay the bonus cells on top of the board as
+We overlay the bonus cells on top of the board,
 
 ```python
 _TW = BonusType.TRIPLE_WORD
@@ -91,17 +91,68 @@ BONUS_GRID: list[list[BonusType]] = [
 ]
 ```
 
-The rack as a list of tiles
+init the rack as a list of tiles,
 
 ```python
 class Rack:
     tiles: list[str]
 ```
 
-And the letter point values as a simple dict[str, int].
+and the letter point values as a simple dict of (str, int).
+
+We represent the dictionary of valid words (~170k words) as a MARISA trie. This gives us a much smaller memory footprint than a standard dict, while retaining the raw lookup speed. Crucially, this gives us the ability to do prefix queries, which prune the tree aggressively—branches are abandoned as soon as no dictionary word can start with the current prefix.
 
 That gives us the basic building blocks to start with!
 
 ## Algorithm
 
 The naive approach to generate the 'best' move for a given board state and rack of tiles is to brute force compute every possible word from our rack, and check every possible placement across the board state. This would be insanely inefficient though. Luckily for me, some people much smarter than I designed what is now the [canonical algorithm](https://www.cs.cmu.edu/afs/cs/academic/class/15451-s06/www/lectures/scrabble.pdf) for this problem space.
+
+### Anchors
+
+Instead of brute forcing every possible option, we constraint our search space to only the cells that can actually hold a word. We call these cells anchors. Strictly, an anchor is an empty cell in which a new word can start or pass through. On a non-empty board, any empty cell adjacent to a filled cell is an anchor. On an empty board, only the center cell is an anchor.
+
+### Cross-checks
+
+We use anchors to do cross-checks. For each anchor, some letters are forbidden in the perpendicular direction because they don’t make a valid word. Cross-checks pre-compute, per cell, the set of letters that can legally be placed there without forming an invalid word in the other direction.
+
+For example, if CAT runs horizontally at row 7, placing a tile at (8, 7) must form a valid word reading vertically: C?. Only letters that extend C into a real word are in the cross-check set for that cell.
+
+### Move generation
+
+To actually generate the list of valid moves, we do the following for each anchor, both vertically and horizontally:
+
+Left side--tiles from the rack placed before the anchor, up to a length limit set by the gap to the previous anchor or board edge. Each candidate prefix is validated against the dictionary of valid words and cross-checks before recursing.
+
+Right side--starting from the anchor, extend right or downward one cell at a time.
+
+- If the cell is occupied, incorporate the existing tile and continue (the dictionary prefix check prunes dead ends).
+- If the cell is empty, try every rack tile (and the ? wildcard for any letter) that is both a valid dictionary continuation and passes the cross-check for that cell.
+- Record a move whenever the partial word is a complete dictionary word, has passed through the anchor, and at least one rack tile was placed.
+
+### Scoring
+
+After move generation, we dedupe—the same word at the same position can be found via multiple anchors. Each unique move is then scored:
+
+1. Per-tile face values
+2. Letter multipliers (2L, 3L) applied to new tiles
+3. Word multipliers (2W, 3W) applied if any placed tile lands on a word bonus cell
+4. Bingo bonus of +40 points if all 7 tiles are used in one move
+
+The top N (default 20) moves are returned in score descending order. The user can tap on a move in the UI to see its place on the board, and can optionally apply the move directly to the board.
+
+## Auth
+
+Auth for this project was fun to solve. I wanted users to be able to create games and try the system without creating an account, and I REALLY didn't want to require users to enter any personal info in the account creation process.
+
+The solution I resolved on was to allow users to use the system within a browser session, identified by the Flask secret and a cookie. This lets users create, update, and delete their games within the browser session, and if they want real persistence, they can create an account with a username and password. No email or personal info is required. We enforce username uniqueness constraints, and recovery codes are generated and shown at account create time in case the user forgets their password.
+
+## Other features
+
+- Redis for token bucket rate limiting
+- Vintage board game-looking UI (I'm not a designer lol)
+
+## Limitations
+
+- Occasionally, a returned move isn’t recognized as valid by the NYT game. This is generally due to deltas in the dictionary of allowed words that I’m using and the dictionary that NYT uses. NYT uses the NASPA wordlist, which requires a membership fee to be able to access. I’m using an open source list which occasionally returns words not allowed by NYT. (I can’t remember who exactly I got the list from; if I remember the repo I’ll give them credit here).
+- The system currently only supports NYT crossplay. I'd like to extend support to Words with Friends, Scrabble, and other similar games. Most of this comes down to switching the dictionary, grid size/bonus layout, and letter point values, so it _should_ be relatively easy.
