@@ -1,6 +1,6 @@
 ---
 title: "Crossplay Solver"
-frameworks: [Python, Redis, Docker, Postgres, Marisa-trie, HTML, CSS, JS]
+frameworks: [Python, Redis, Docker, Postgres, Marisa-trie, HTML, CSS]
 demo_url: "https://cp-solver.fly.dev/"
 show_readme: false
 ---
