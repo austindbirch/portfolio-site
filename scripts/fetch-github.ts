@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import type { GitHubRepo } from '../src/types'
 
-const USERNAME = process.env.GITHUB_USERNAME || 'austin'
+const USERNAME = process.env.GITHUB_USERNAME || 'austindbirch'
 const TOKEN = process.env.GITHUB_TOKEN
 
 const headers: Record<string, string> = {
