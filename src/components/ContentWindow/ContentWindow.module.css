@@ -1,0 +1,32 @@
+/* src/components/ContentWindow/ContentWindow.module.css */
+.body {
+  padding: 20px 22px;
+  overflow-y: auto;
+  height: 100%;
+  font-family: var(--font-ui);
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--c7);
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+.body :global(h1) { font-size: 20px; font-weight: 700; color: var(--c15); margin-bottom: 14px; letter-spacing: -0.3px; }
+.body :global(h2) { font-size: 14px; font-weight: 600; color: var(--c12); margin: 18px 0 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+.body :global(p)  { margin-bottom: 10px; }
+.body :global(a)  { color: var(--c12); text-decoration: none; }
+.body :global(a:hover) { text-decoration: underline; }
+.body :global(ul) { padding-left: 16px; margin-bottom: 10px; }
+.body :global(li) { margin-bottom: 6px; }
+.body :global(code) {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--c14);
+  background: rgba(86,212,221,0.08);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+@media (max-width: 639px) {
+  .body { font-size: 15px; }
+}

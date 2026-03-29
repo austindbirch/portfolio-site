@@ -1,0 +1,87 @@
+/* src/components/Terminal/Terminal.module.css */
+.terminal {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #1E1E1E;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-term);
+  line-height: 1.65;
+  color: var(--fg);
+  cursor: text;
+}
+
+.output {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 16px 4px;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+.line {
+  display: block;
+  white-space: pre-wrap;
+  word-break: break-all;
+  min-height: 1.65em;
+}
+
+/* Terminal color utility classes (used by commands.ts output HTML) */
+.terminal :global(.t-dir)    { color: var(--c12); font-weight: 500; }
+.terminal :global(.t-text)   { color: var(--c7); }
+.terminal :global(.t-err)    { color: var(--c9); }
+.terminal :global(.t-ok)     { color: var(--c10); }
+.terminal :global(.t-dim)    { color: var(--c8); }
+.terminal :global(.t-yellow) { color: var(--c11); }
+.terminal :global(.t-cyan)   { color: var(--c14); }
+.terminal :global(.ls-output)  { display: flex; gap: 20px; flex-wrap: wrap; padding: 2px 0; }
+.terminal :global(.cat-output) { border-left: 2px solid rgba(255,255,255,0.06); padding-left: 12px; margin: 2px 0 6px; }
+.terminal :global(.help-output){ padding: 4px 0; }
+.terminal :global(.help-header){ font-weight: 600; margin-bottom: 8px; }
+.terminal :global(.help-row)   { display: flex; gap: 0; }
+.terminal :global(.help-row .t-cyan) { min-width: 180px; }
+.terminal :global(.tm-h1)   { color: var(--c11); font-weight: 700; font-size: 15px; }
+.terminal :global(.tm-h2)   { color: var(--c12); font-weight: 600; }
+.terminal :global(.tm-h3)   { color: var(--c14); font-weight: 600; }
+.terminal :global(.tm-code) { color: var(--c14); background: rgba(86,212,221,0.08); padding: 1px 5px; border-radius: 3px; }
+.terminal :global(.tm-bold) { color: var(--c15); font-weight: 700; }
+.terminal :global(.tm-dim)  { color: var(--c8); }
+.terminal :global(.tm-text) { color: var(--c7); }
+.terminal :global(.tm-arrow){ color: var(--c5); }
+
+.inputRow {
+  display: flex;
+  align-items: center;
+  padding: 4px 16px max(12px, env(safe-area-inset-bottom));
+  border-top: 0.5px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+  touch-action: pan-y;
+}
+
+.prompt {
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-term);
+  line-height: 1.65;
+}
+
+.input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--fg);
+  caret-color: var(--cursor-col);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-term);
+  line-height: 1.65;
+  padding: 0;
+  user-select: text;
+}
+
+@media (max-width: 639px) {
+  .terminal { font-size: var(--font-size-term-mobile); }
+  .prompt   { font-size: var(--font-size-term-mobile); }
+  .input    { font-size: var(--font-size-term-mobile); }
+}
