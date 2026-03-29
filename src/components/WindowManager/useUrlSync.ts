@@ -2,7 +2,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { useWindowManager } from './useWindowManager'
 import type { WindowId } from '@/types'
 
@@ -23,9 +23,8 @@ export const WINDOW_TO_PATH: Record<WindowId, string> = {
 export function useUrlSync() {
   const { windows, openWindow, focusWindow } = useWindowManager()
   const pathname = usePathname()
-  const router = useRouter()
 
-  // Inbound: URL → window state on mount / pathname change
+  // Inbound: URL → window state on mount / direct navigation (back button, deep link)
   useEffect(() => {
     const windowId = PATH_TO_WINDOW[pathname]
     if (windowId && !windows[windowId]?.isOpen) {
@@ -42,15 +41,17 @@ export function useUrlSync() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname])
 
-  // Outbound: focused window → URL push
+  // Outbound: focused window → URL bar update WITHOUT triggering navigation.
+  // router.push() would remount DesktopShell (it lives in the page, not layout),
+  // so we use replaceState directly to keep the URL in sync without a route change.
   useEffect(() => {
     const focusedWindow = Object.values(windows).find(w => w.isFocused && w.isOpen)
     if (!focusedWindow) return
     const targetPath = WINDOW_TO_PATH[focusedWindow.id]
-    if (targetPath && targetPath !== pathname) {
-      router.push(targetPath)
+    if (targetPath && targetPath !== window.location.pathname) {
+      window.history.replaceState(null, '', targetPath)
     }
-  }, [windows, pathname, router])
+  }, [windows])
 
   return { WINDOW_TO_PATH }
 }

@@ -60,7 +60,7 @@ export function useTerminal(vfs: VFS, onOpenWindow: (id: WindowId) => void) {
     dispatch({ type: 'PUSH_HISTORY', cmd: trimmed })
 
     // Echo prompt + command
-    appendLine(`${buildPromptHtml(state.cwd)} <span class="t-text">${trimmed}</span>`, true)
+    appendLine(`${buildPromptHtml(state.cwd)}  <span class="t-text">${trimmed}</span>`, true)
 
     const parts = trimmed.split(/\s+/)
     const result = executeCommand(parts[0], parts.slice(1), state.cwd, vfs)

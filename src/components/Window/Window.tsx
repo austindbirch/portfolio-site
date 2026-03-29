@@ -35,7 +35,7 @@ export function Window({ id, title, children }: WindowProps) {
 
   return (
     <div
-      className={`${styles.window} ${win.isOpen ? '' : styles.hidden} ${win.isFocused ? styles.focused : ''}`}
+      className={`${styles.window} ${styles[id] ?? ''} ${win.isOpen ? '' : styles.hidden} ${win.isFocused ? styles.focused : ''}`}
       style={style}
       onPointerDown={() => focusWindow(id)}
       onPointerMove={drag.onPointerMove}

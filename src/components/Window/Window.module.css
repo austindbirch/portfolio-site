@@ -1,5 +1,11 @@
 /* src/components/Window/Window.module.css */
 
+/* Per-window glow colors */
+.terminal { --glow: rgba(17, 168, 205, 0.18); --glow-focused: rgba(17, 168, 205, 0.45); }
+.projects { --glow: rgba(77, 170, 252, 0.18); --glow-focused: rgba(77, 170, 252, 0.45); }
+.about    { --glow: rgba(188, 140, 255, 0.18); --glow-focused: rgba(188, 140, 255, 0.45); }
+.contact  { --glow: rgba(63, 185, 80, 0.18);  --glow-focused: rgba(63, 185, 80, 0.45); }
+
 .window {
   position: absolute;
   display: flex;
@@ -7,9 +13,9 @@
   background: var(--win-surface);
   border: 0.5px solid var(--win-border);
   border-radius: 11px;
-  box-shadow: var(--win-shadow);
+  box-shadow: var(--win-shadow), 0 0 14px 2px var(--glow, transparent);
   overflow: hidden;
-  transition: opacity 0.15s, transform 0.15s;
+  transition: opacity 0.15s, transform 0.15s, box-shadow 0.2s;
   min-width: 280px;
   min-height: 180px;
 }
@@ -21,7 +27,7 @@
 }
 
 .focused {
-  box-shadow: var(--win-shadow-focused);
+  box-shadow: var(--win-shadow-focused), 0 0 20px 3px var(--glow-focused, transparent);
 }
 
 .titlebar {
