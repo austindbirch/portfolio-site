@@ -1,7 +1,7 @@
 // src/components/Terminal/useTerminal.ts
 'use client'
 
-import { useCallback, useReducer } from 'react'
+import { useCallback, useReducer, useRef } from 'react'
 import { executeCommand } from './commands'
 import type { VFS, TerminalOutputLine, WindowId } from '@/types'
 
@@ -30,10 +30,9 @@ function reducer(state: TerminalState, action: Action): TerminalState {
   }
 }
 
-let lineId = 0
-const nextId = () => String(++lineId)
-
 export function useTerminal(vfs: VFS, onOpenWindow: (id: WindowId) => void) {
+  const lineIdRef = useRef(0)
+  const nextId = () => String(++lineIdRef.current)
   const [state, dispatch] = useReducer(reducer, {
     cwd: '~',
     output: [],

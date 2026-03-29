@@ -72,7 +72,7 @@ export function Terminal({ vfs }: TerminalProps) {
       <div className={styles.inputRow}>
         <span
           className={styles.prompt}
-          dangerouslySetInnerHTML={{ __html: term.buildPromptHtml(term.cwd) + '  ' }}
+          dangerouslySetInnerHTML={{ __html: term.buildPromptHtml(term.cwd) }}
         />
         <input
           ref={inputRef}

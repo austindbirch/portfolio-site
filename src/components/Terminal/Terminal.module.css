@@ -52,6 +52,7 @@
 .inputRow {
   display: flex;
   align-items: center;
+  gap: 0.45ch;
   padding: 4px 16px max(12px, env(safe-area-inset-bottom));
   border-top: 0.5px solid rgba(255,255,255,0.05);
   flex-shrink: 0;
