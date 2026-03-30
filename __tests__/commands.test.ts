@@ -60,7 +60,7 @@ describe('executeCommand', () => {
   })
 
   it('unknown command returns error', () => {
-    const result = executeCommand('rm', ['-rf', '/'], '~', vfs)
+    const result = executeCommand('unknowncmd', [], '~', vfs)
     expect(result.output).toContain('command not found')
   })
 
